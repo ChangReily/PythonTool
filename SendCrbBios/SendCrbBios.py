@@ -151,18 +151,9 @@ def UnzipFile(FilePath, ExtractPath):
     print ('--------------------\n')
     return
 
-if __name__ == "__main__":
-    ShareClass=BiosFolderClass('BiosAmdCereme')
-    BiosFullPath=ShareClass.LastBuildNum('Release')
-    print (f'Full File Path: {BiosFullPath}\n', file=sys.stdout, flush=True)
-
-    Workspace='D:\\Temp'
-    UnzipFile(BiosFullPath, Workspace)
-
-    TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(BiosFullPath))[0])
-    print (TempFolder)
-
+def GetBiosBinPath(TempFolder):
     Found=False
+    TargetBiosPath=''
     CmdStr=f'dir {TempFolder} /b'
     Buffer=CallSubprocess(CmdStr).StdoutBuffer()
     for idx in range(0, len(Buffer), 1):
@@ -172,7 +163,25 @@ if __name__ == "__main__":
             BiosName=Buffer[idx].strip()
             Found=True
         # print (Buffer[idx])
-
     if Found==True:
         TargetBiosPath=os.path.join(TempFolder, BiosName)
-        print (TargetBiosPath)
+    print (TargetBiosPath)
+    return TargetBiosPath
+
+if __name__ == "__main__":
+    ShareClass=BiosFolderClass('BiosAmdCereme')
+    BiosPackagePath=ShareClass.LastBuildNum('Release')
+    print (f'Full File Path: {BiosPackagePath}\n', file=sys.stdout, flush=True)
+
+    Workspace='D:\\Temp'
+    UnzipFile(BiosPackagePath, Workspace)
+
+    TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(BiosPackagePath))[0])
+    BiosBinPath=GetBiosBinPath(TempFolder)
+
+    # ZipBiosBin(BiosBinPath)
+
+    # SendBiosBin()
+    
+
+    
