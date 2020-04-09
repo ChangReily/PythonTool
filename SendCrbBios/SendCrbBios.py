@@ -8,6 +8,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+ZipToolPath='C:\\Program Files\\7-Zip\\7z.exe'
+
 ################################################################################
 #   Subprocess.popen call
 ################################################################################
@@ -143,7 +145,7 @@ class BiosFolderClass(object):
 
 
 def UnzipFile(FilePath, ExtractPath):
-    CmdStr=f'"C:\\Program Files\\7-Zip\\7z.exe" x {FilePath} -o{ExtractPath} -y -r'
+    CmdStr=f'"{ZipToolPath}" x {FilePath} -o{ExtractPath} -y -r'
     Buffer=CallSubprocess(CmdStr).StdoutBuffer()
     print ('--------------------')
     for idx in range(1, len(Buffer), 1):
@@ -167,6 +169,16 @@ def GetBiosBinPath(TempFolder):
         TargetBiosPath=os.path.join(TempFolder, BiosName)
     print (TargetBiosPath)
     return TargetBiosPath
+def ZipBiosBin(BiosBinPath):
+    ZipFileName=os.path.splitext(os.path.basename(BiosBinPath))[0]
+    ZipFileDir=os.path.dirname(BiosBinPath)
+    ZipBiosBinCmd=f'"{ZipToolPath}" a {ZipFileDir}\\{ZipFileName}.7z {BiosBinPath}'
+    Buffer=CallSubprocess(ZipBiosBinCmd).StdoutBuffer()
+    print ('--------------------')
+    for idx in range(1, len(Buffer), 1):
+        print (Buffer[idx])
+    print ('--------------------\n')
+    return
 
 if __name__ == "__main__":
     ShareClass=BiosFolderClass('BiosAmdCereme')
@@ -179,7 +191,7 @@ if __name__ == "__main__":
     TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(BiosPackagePath))[0])
     BiosBinPath=GetBiosBinPath(TempFolder)
 
-    # ZipBiosBin(BiosBinPath)
+    ZipBiosBin(BiosBinPath)
 
     # SendBiosBin()
     
