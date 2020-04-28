@@ -18,7 +18,7 @@ class SvnNotificationStruct:
     Author = ''
     Date = '2018-01-01'
     ChgPath = 'File Changed:\n'
-    ChgTitle = '\[BIOS18\]'
+    ChgTitle = '[BIOS18]'
     ChgLog = ''
     EmailSender = ''
     EmailRecipientList = ''
@@ -43,7 +43,7 @@ msg = MIMEMultipart('alternative')
 def SvnInfoGrabber(rev):
     global text
 
-    process = subprocess.Popen(['svn', 'log', 'https://csvnaus-pro.austin.hpicorp.net:20181/svn/svn-psgfw-platform14', '-r', rev, '-v'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(['svn', 'log', 'https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14', '-r', rev, '-v'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process_out, process_err = process.communicate()
     revfdBuffer = process_out.decode("utf-8", 'ignore').splitlines()
     revfdBufferCounts=len(revfdBuffer)
@@ -84,16 +84,33 @@ def SvnInfoGrabber(rev):
     SvnInfos.ChgPath = SvnInfos.ChgPath.replace("  A ", "Added : ")
     SvnInfos.ChgPath = SvnInfos.ChgPath.replace("  D ", "Deleted : ")
     
-    # Build Change Description
-    for idx in range(MPathEndLine, revfdBufferCounts-1, 1):
-        SvnInfos.ChgLog = SvnInfos.ChgLog + revfdBuffer[idx] + '\n'
+    if 'Sprint' in revfdBuffer[MPathEndLine+1]:
+        SprintTitle=revfdBuffer[MPathEndLine+1]
+        SprintChgLog=''
+        for idx in range(MPathEndLine+1, revfdBufferCounts-1, 1):
+            SprintChgLog = SprintChgLog + revfdBuffer[idx] + '\n'
+        SvnInfos.ChgTitle = '[BIOSxx] Project - ' + SprintTitle
+        SvnInfos.ChgLog = SvnInfos.ChgLog + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Story ID:\n' + 'N/A\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Story Description:\n' + '[BIOSxx] Project -' + SprintTitle + '\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Issue ID/Description:\n' + SprintChgLog + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Root cause:\n' + 'N/A\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Change Description:\n' + SprintChgLog + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Repro Steps: \n' + 'N/A\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Catalog:\n' + 'Intel, Balos\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Does this apply to other projects?\n' + 'No, for 2017 Balos only.\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Is Bios specification update required?\n' + 'No\n' + '\n'
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Is test plan update required?\n' + 'No\n' + '\n'            
+    else:
+        for idx in range(MPathEndLine, revfdBufferCounts-1, 1):
+            SvnInfos.ChgLog = SvnInfos.ChgLog + revfdBuffer[idx] + '\n'
 
-    # Build Title
-    for idx in range(0,revfdBufferCounts,1):
-        regex = re.search('\[BIOS[0-9]{2}\]', revfdBuffer[idx])
-        if regex != None:
-            SvnInfos.ChgTitle = revfdBuffer[idx]
-            break
+        # Build Title
+        for idx in range(0,revfdBufferCounts,1):
+            regex = re.search('\[BIOS[0-9]{2}\]', revfdBuffer[idx])
+            if regex != None:
+                SvnInfos.ChgTitle = revfdBuffer[idx]
+                break
     return
 
 def mailcomposer_Text():
@@ -112,7 +129,7 @@ def mailcomposer_Text():
            + '----' + '\n' \
            + SvnInfos.ChgPath + '\n'\
            + "Modified by: Chang, Reily"
-    print text
+    print (text)
     # Record the MIME types of both parts - text/plain and text/html.
     TextContext = MIMEText(text, 'plain')
     # Attach parts into message container.
@@ -138,7 +155,7 @@ def mailcomposer_HTML():
            + '----' + '\n' \
            + SvnInfos.ChgPath + '\n'\
            + "Modified by: Chang, Reily"
-    print body
+    print (body)
 
     # Update Bold String
     body = body.replace("Revision:", "<b>Revision:</b>", 1)
@@ -156,18 +173,16 @@ def mailcomposer_HTML():
     body = body.replace("File Changed:", "<b>File Changed:</b>", 1)
     body = body.replace("Modified by:", "<b>Modified by:</b>", 1)
     
-    body = body.replace("\n", "<BR>")
-    body_html = """\
-            <html>
-              <head></head>
-              <body>
-                <p style='font-family:"Calibri",sans-serif; font-size:12.0pt;'>
-            """ + body + \
-            """
-                </font></p>
-              </body>
-            </html>
-            """
+    # body = body.replace("\n", "<BR>")
+    body_html = """
+<html><head></head>
+<body>
+<pre style='font-family:"Calibri",sans-serif; font-size:12.0pt;'>
+"""+ body +"""
+</pre>
+</body>
+</html>
+"""
     # Record the MIME types of both parts - text/plain and text/html.            
     HtmlContext = MIMEText(body_html, 'html')   
     # Attach parts into message container.
@@ -189,7 +204,7 @@ def SendEmail():
 def main():
     #global RevsionSearch
     if RevsionSearch==0:
-        print 'No Revision commit by Reily'
+        print ('No Revision commit by Reily')
         return
     #print 'Revsion Find'+str(RevsionSearch)
     #To collect information of designated revision
@@ -210,7 +225,7 @@ def main():
 
 def GetLatestModifyRev():
     global RevsionSearch
-    process = subprocess.Popen(['svn', 'log', 'https://csvnaus-pro.austin.hpicorp.net:20181/svn/svn-psgfw-platform14', '-l', '50', '--search', 'reily'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(['svn', 'log', 'https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14', '-l', '50', '--search', 'reily'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process_out, process_err = process.communicate()
     revfdBuffer = process_out.decode("utf-8", 'ignore').splitlines()
     revfdBufferCounts=len(revfdBuffer)
@@ -228,10 +243,18 @@ def GetLatestModifyRev():
     # capture revision#
     regex = re.search('[r][0-9]{0,}', revfdBuffer[1])
     RevsionSearch = regex.group().lstrip('r')
-    print 'Revsion Find'+str(RevsionSearch)
+    print ('Revsion Find '+str(RevsionSearch))
     
 if __name__ == '__main__':
-    GetLatestModifyRev()
-    main()
-    os.system("pause")
+	argc = len(sys.argv)
+	if argc == 2:
+		Parameter = sys.argv[1]
+		SvnInfoGrabber(Parameter)
+		mailcomposer_HTML()
+		SendEmail()
+	else:
+		GetLatestModifyRev()
+		main()
+		os.system("pause")
 
+	
