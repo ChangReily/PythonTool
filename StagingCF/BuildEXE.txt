@@ -1,0 +1,1 @@
+C:\Python36\Scripts\pyinstaller --onefile --icon=123.ico StagingCF.py

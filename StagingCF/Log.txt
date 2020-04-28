@@ -1,0 +1,174 @@
+D:\BIOS\CopySvn\StagingCF>py -3 StagingCF_SMIP.py HpAloe10SMIP.ini
+
+===== Parsing HpAloe10SMIP.ini config file =====
+ReleaseType : ProductionReleaseSMIP
+ProjectUrl : https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/ProjectsCF/Bios17Platform/HpAloe10
+BiosIdPath : HpPlatformPkg/BLD/BiosId.env
+BiosVersion: 99.99.00
+BuildId    : 0000
+
+Staging URL is as follows:
+https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+
+===== Check BIOS version already used in release tag or not =====
+Check URL: https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/ProductionRelease/tags/S95Smip/99.99.00_0000
+->Cmd: svn info https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/ProductionRelease/tags/S95Smip/99.99.00_0000
+
+BIOS Version is not used.!!
+
+===== Check Staging URL is used or not=====
+Check URL: https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+->Cmd: svn info https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+
+URL is not exist and prepare to create!!
+
+===== Create branches to StageCF =====
+Cmd:
+svn copy -m "Perpare HpAloe10 99.99.00 signing for SMIP Production Release" --parents https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/ProjectsCF/Bios17Platform/HpAloe10 https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+
+Committing transaction...
+Committed revision 250215.
+
+===== Checkout StageCF =====
+Cmd: svn checkout https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10 --depth empty D:\BIOS\CopySvn\StagingCF\SvnTempFolder
+ U   SvnTempFolder
+Checked out revision 250215.
+
+
+Cmd: svn update --set-depth empty D:\BIOS\CopySvn\StagingCF\SvnTempFolder\HpPlatformPkg
+Updating 'SvnTempFolder\HpPlatformPkg':
+A    SvnTempFolder\HpPlatformPkg
+Updated to revision 250215.
+
+
+Cmd: svn update --set-depth empty D:\BIOS\CopySvn\StagingCF\SvnTempFolder\HpPlatformPkg\BLD
+Updating 'SvnTempFolder\HpPlatformPkg\BLD':
+A    SvnTempFolder\HpPlatformPkg\BLD
+Updated to revision 250215.
+
+
+Cmd: svn update --set-depth empty D:\BIOS\CopySvn\StagingCF\SvnTempFolder\HpPlatformPkg\BLD\BiosId.env
+Updating 'SvnTempFolder\HpPlatformPkg\BLD\BiosId.env':
+A    SvnTempFolder\HpPlatformPkg\BLD\BiosId.env
+Updated to revision 250215.
+
+
+===== Update External PEG Number =====
+
+use cmd to get last version for platform and core
+Cmd: svn info https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/ProjectsCF/Bios17Platform/HpAloe10
+Cmd: svn info https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-core/ReleaseTags/2017.3/HpCore/PubManifest/Sprint19-12
+Platform: 249955   https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/ProjectsCF/Bios17Platform/HpAloe10
+Core    : 43692    https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-core/ReleaseTags/2017.3/HpCore/PubManifest/Sprint19-12
+
+Cmd: svn propget svn:externals D:\BIOS\CopySvn\StagingCF\SvnTempFolder
+svn propget svn:externals D:\BIOS\CopySvn\StagingCF\SvnTempFolder
+/svn/svn-psgfw-core/ReleaseTags/2017.3/HpCore/PubManifest/Sprint19-12@43692 HpCore
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/BaseTools/Sprint18-12@43692 Edk2/BaseTools
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/BpCommonPkg/Sprint18-14@43692 Edk2/BpCommonPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/Conf/Sprint18-12@43692 Conf
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/CryptoPkg/Sprint18-12@43692 Edk2/CryptoPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/FatBinPkg/Sprint18-12@43692 Edk2/FatBinPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/IntelFrameworkModulePkg/Sprint18-12@43692 Edk2/IntelFrameworkModulePkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/IntelFrameworkPkg/Sprint18-12@43692 Edk2/IntelFrameworkPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/MdeModulePkg/Sprint19-01@43692 Edk2/MdeModulePkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/MdePkg/Sprint18-19@43692 Edk2/MdePkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/NetworkPkg/Sprint18-12@43692 Edk2/NetworkPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/PcAtChipsetPkg/Sprint18-12@43692 Edk2/PcAtChipsetPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/PerformancePkg/Sprint18-12@43692 Edk2/PerformancePkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/SecurityPkg/Sprint18-19@43692 Edk2/SecurityPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/ShellPkg/Sprint18-12@43692 Edk2/ShellPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/SourceLevelDebugPkg/Sprint18-12@43692 Edk2/SourceLevelDebugPkg
+/svn/svn-psgfw-core/ReleaseTags/2017.3/Core_RP1.4/UefiCpuPkg/Sprint18-12@43692 Edk2/UefiCpuPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/HpNuvoton797Pkg/2017@249955 HpNuvoton797Pkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/HpNuvotonCommonPkg/2017@249955 HpNuvotonCommonPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/Intel/GeminiLake/GeminiLakeRcPkg/2.0.9/Intel@249955 Intel
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/Intel/GeminiLake/HpGlkPkg@249955 HpIntelChipsetPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/Intel/GeminiLake/PlatformRoyalParkPkg/1410/IntelFsp2Pkg@249955 Edk2/IntelFsp2Pkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/Chipset/Intel/GeminiLake/PlatformRoyalParkPkg/1410/IntelFsp2WrapperPkg@249955 Edk2/IntelFsp2WrapperPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpCommonPkg@249955 HpCommonPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpConnectionDevicePkg@249955 HpConnectionDevicePkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpDetachablesPkg@249955 HpDetachablesPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpFWUpdatePkg@249955 HpFWUpdatePkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpGfxPkg@249955 HpGfxPkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpMobilePkg@249955 HpMobilePkg
+/svn/svn-psgfw-platform14/branches/Bios17PlatformCommon/IntelGlkOoc/PE17/HpThermalPkg@249955 HpThermalPkg
+svn propset svn:externals D:\BIOS\CopySvn\StagingCF\SvnTempFolder -F D:\BIOS\CopySvn\StagingCF\Externals.txt
+property 'svn:externals' set on 'SvnTempFolder'
+
+
+
+===== Update BIOS Version/Build ID (HpPlatformPkg/BLD/BiosId.env)=====
+#
+# (c) Copyright 2018 HP Development Company, L.P.
+# This software and associated documentation (if any) is furnished under a license and may only be used or
+# copied in accordance with the terms of the license. Except as permitted by such license, no part of this
+# software or documentation may be reproduced, stored in a retrieval system, or transmitted in any
+# form or by any means without the express written consent of HP Development Company.
+#
+
+BOARD_ID          = S95
+VERSION_MAJOR     = 63
+VERSION_MINOR     = 00
+VERSION_FEATURE   = 63
+BUILD_ID          = 0000
+
+
+===== Commit External and BiosId.env change =====
+** Commit Message Start **
+Update PEG number
+   Platform: 249955
+   Core    : 43692
+Update BiosId.env
+   Version : 99.99.00
+   Build ID: 0000
+** Commit Message End **
+
+svn commit -F D:\BIOS\CopySvn\StagingCF\Message.txt D:\BIOS\CopySvn\StagingCF\SvnTempFolder
+Sending        SvnTempFolder
+Sending        SvnTempFolder\HpPlatformPkg\BLD\BiosId.env
+Transmitting file data .done
+Committing transaction...
+Committed revision 250216.
+
+
+
+===== StagingCF Create Done =====
+------------------------------------------------------------------------
+Path: HpAloe10
+URL: https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+Relative URL: ^/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+Repository Root: https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14
+Repository UUID: e9b531f7-ec77-4c77-85ca-b7c258f60c3b
+Revision: 250216
+Node Kind: directory
+Last Changed Author: reily.chang
+Last Changed Rev: 250216
+Last Changed Date: 2019-07-25 15:40:35 +0800 (g|, 25 C 2019)
+------------------------------------------------------------------------
+r250216 | reily.chang | 2019-07-25 15:40:35 +0800 (週四, 25 七月 2019) | 6 lines
+Changed paths:
+   M /branches/StagingCF/S95Smip/999900_0000/HpAloe10
+   M /branches/StagingCF/S95Smip/999900_0000/HpAloe10/HpPlatformPkg/BLD/BiosId.env
+
+Update PEG number
+   Platform: 249955
+   Core    : 43692
+Update BiosId.env
+   Version : 99.99.00
+   Build ID: 0000
+------------------------------------------------------------------------
+r250215 | reily.chang | 2019-07-25 15:40:13 +0800 (週四, 25 七月 2019) | 1 line
+Changed paths:
+   A /branches/StagingCF/S95Smip
+   A /branches/StagingCF/S95Smip/999900_0000
+   A /branches/StagingCF/S95Smip/999900_0000/HpAloe10 (from /branches/ProjectsCF/Bios17Platform/HpAloe10:250214)
+
+Perpare HpAloe10 99.99.00 signing for SMIP Production Release
+------------------------------------------------------------------------
+
+Please checkout the code with follow Staging URL!!
+
+https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14/branches/StagingCF/S95Smip/999900_0000/HpAloe10
+
+Before send the signing request, please verify local build status!!
