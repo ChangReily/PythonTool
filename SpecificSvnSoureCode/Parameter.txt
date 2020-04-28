@@ -1,0 +1,35 @@
+#
+# Austin Server: https://csvnaus-pro.austin.hpicorp.net:20181
+# Local Server: svn://localhost
+#
+#SvnServerUrl=https://csvnaus-pro.austin.hpicorp.net:20181/svn/svn-psgfw-platform14
+#SvnServerUrl=svn://localhost
+SvnServerUrl=svn://nf-cmitbiossrv.auth.hpicorp.net/svn/svn-psgfw-platform14
+
+#
+# Project Path
+#
+ProjectPath=/trunk/Projects/BIOS18GLK/HpBalos
+
+#
+# The location of checkout or export path
+#
+WorkingCopyPath=D:\BIOS\BIOS18GLK\157456
+
+#
+# Version number
+#
+#210147-RC208
+#203487-RC206
+#184521-Q95_00.17.00
+#176385-Q95_00.11.00
+#175732-RC204
+#172803-Q95_00.10.00
+#170186(SyncFSPS_SIze)
+#160531 Q95_00.00.05	Fail
+#157840	Q95_00.00.04	Fail
+#157475			
+#157456			Pass
+#156674 Q95_00.00.03	Pass
+#154759			Pass
+Version=157456

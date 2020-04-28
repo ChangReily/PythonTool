@@ -1,0 +1,21 @@
+#
+# Austin Server: https://csvnaus-pro.austin.hpicorp.net:20181
+# Local Server: svn://localhost
+#
+SvnServerUrl=https://csvnaus-pro.austin.hpicorp.net:20181
+#SvnServerUrl=svn://localhost
+
+#
+# Project Path
+#
+#ProjectPath=/svn/svn-psgfw-platform14/trunk/Projects/BIOS17Rr/HpKirk
+ProjectPath=/svn/svn-psgfw-platform14/trunk/Projects/BIOS18GLK/HpBalos
+#
+# The location of checkout or export path
+#
+WorkingCopyPath=D:\BIOS\BIOS18_HpBalos\Balos_
+
+#
+# Version number
+#
+Version=170022
