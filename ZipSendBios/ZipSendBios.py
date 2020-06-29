@@ -150,13 +150,13 @@ def UnzipFile(FilePath, ExtractPath):
     print ('--------------------\n')
     return
 
-def GetBiosBinPath(TempFolder, ProjectId):
+def GetBiosBinPath(TempFolder, BiosId):
     Found=False
     TargetBiosPath=''
     CmdStr=f'dir {TempFolder} /b'
     Buffer=CallSubprocess(CmdStr).StdoutBuffer()
     for idx in range(0, len(Buffer), 1):
-        match = re.search(ProjectId+'_[0-9A-Fa-f]{6}_[0-9A-Fa-f]{2}.bin', Buffer[idx])
+        match = re.search(str(BiosId)+'_[0-9A-Fa-f]{6}_[0-9A-Fa-f]{2}.bin', Buffer[idx])
         if match:
             # print (Buffer[idx])
             BiosName=Buffer[idx].strip()
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     BiosStorePath=os.getenv('BiosStorePath')
     Workspace=os.getenv('WORKSPACE')
     BuildNumber=os.getenv('BUILD_NUMBER')
-    ProjectId=os.getenv('PROJECT_ID')
+    BiosId=os.getenv('BIOS_ID')
 
     TargetFolder=os.path.join(Workspace, f'Build_{BuildNumber}')
     if os.path.isdir(TargetFolder) == False:
@@ -192,14 +192,14 @@ if __name__ == "__main__":
     ReleaseBioaPackage=os.path.join(BiosStorePath,'Fv_Release.7z')
     UnzipFile(ReleaseBioaPackage, Workspace)
     TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(ReleaseBioaPackage))[0])
-    BiosBinPath=GetBiosBinPath(TempFolder, ProjectId)
+    BiosBinPath=GetBiosBinPath(TempFolder, BiosId)
     # ZipReleaseBiosFile=ZipBiosBin(BiosBinPath)
     shutil.copy2(BiosBinPath, os.path.join(TargetFolder, 'Release'))
 
     DebugBioaPackage=os.path.join(BiosStorePath,'Fv_Debug.7z')
     UnzipFile(DebugBioaPackage, Workspace)
     TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(DebugBioaPackage))[0])
-    BiosBinPath=GetBiosBinPath(TempFolder, ProjectId)
+    BiosBinPath=GetBiosBinPath(TempFolder, BiosId)
     shutil.copy2(BiosBinPath, os.path.join(TargetFolder, 'Debug'))
     # ZipBiosBin(BiosBinPath)
 
