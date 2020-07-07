@@ -99,12 +99,13 @@ if __name__ == "__main__":
     TargetFolder=os.path.join(Workspace, f'Build_{BuildNumber}')
     if os.path.isdir(TargetFolder) == False:
         os.mkdir(TargetFolder)
+        os.mkdir(os.path.join(TargetFolder, 'Release'))
 
     ReleaseBioaPackage=os.path.join(BiosStorePath,'Fv_Release.7z')
     UnzipFile(ReleaseBioaPackage, Workspace)
     TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(ReleaseBioaPackage))[0])
     BiosBinPath=GetBiosBinPath(TempFolder, BiosId)
-    shutil.copy2(BiosBinPath, TargetFolder)
+    shutil.copy2(BiosBinPath, os.path.join(TargetFolder, 'Release'))
 
     ZipBiosBinCmd=f'"{ZipToolPath}" a -t7z {TargetFolder}.7z {TargetFolder}'
     Buffer=CallSubprocess(ZipBiosBinCmd).StdoutBuffer()
