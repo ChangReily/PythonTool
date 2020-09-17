@@ -88,7 +88,7 @@ def GetBiosBinPath(TempFolder, BiosId):
     if Found==True:
         TargetBiosPath=os.path.join(TempFolder, BiosName)
     print (TargetBiosPath)
-    return TargetBiosPath
+    return TargetBiosPath, BiosName
 
 if __name__ == "__main__":
     BiosStorePath=os.getenv('BiosStorePath')
@@ -104,8 +104,12 @@ if __name__ == "__main__":
     ReleaseBioaPackage=os.path.join(BiosStorePath,'Fv_Release.7z')
     UnzipFile(ReleaseBioaPackage, Workspace)
     TempFolder=os.path.join(Workspace, os.path.splitext(os.path.basename(ReleaseBioaPackage))[0])
-    BiosBinPath=GetBiosBinPath(TempFolder, BiosId)
+    BiosBinPath, BiosName=GetBiosBinPath(TempFolder, BiosId)
     shutil.copy2(BiosBinPath, os.path.join(TargetFolder, 'Release'))
+
+    shutil.copy2(BiosBinPath, BiosStorePath)
+    NewBiosName=f'{os.path.splitext(BiosName)[0]}_R{os.path.splitext(BiosName)[1]}'
+    os.rename(os.path.join(BiosStorePath, BiosName), os.path.join(BiosStorePath, NewBiosName))
 
     ZipBiosBinCmd=f'"{ZipToolPath}" a -t7z {TargetFolder}.7z {TargetFolder}'
     Buffer=CallSubprocess(ZipBiosBinCmd).StdoutBuffer()
