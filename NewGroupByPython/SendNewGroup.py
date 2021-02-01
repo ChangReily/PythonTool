@@ -5,6 +5,9 @@ import smtplib, os, sys, re, subprocess, pprint, operator
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+global UpdateSprintFlag
+UpdateSprintFlag=False
+
 global RevsionSearch
 RevsionSearch=0
 
@@ -85,22 +88,16 @@ def SvnInfoGrabber(rev):
     SvnInfos.ChgPath = SvnInfos.ChgPath.replace("  D ", "Deleted : ")
     
     if 'Sprint' in revfdBuffer[MPathEndLine+1]:
+        UpdateSprintFlag=True
+        print (revfdBuffer[MPathEndLine+1])
         SprintTitle=revfdBuffer[MPathEndLine+1]
         SprintChgLog=''
         for idx in range(MPathEndLine+1, revfdBufferCounts-1, 1):
             SprintChgLog = SprintChgLog + revfdBuffer[idx] + '\n'
-        SvnInfos.ChgTitle = '[BIOSxx] Project - ' + SprintTitle
+        SvnInfos.ChgTitle = SprintTitle
         SvnInfos.ChgLog = SvnInfos.ChgLog + '\n'
         SvnInfos.ChgLog = SvnInfos.ChgLog + 'Story ID:\n' + 'N/A\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Story Description:\n' + '[BIOSxx] Project -' + SprintTitle + '\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Issue ID/Description:\n' + SprintChgLog + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Root cause:\n' + 'N/A\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Change Description:\n' + SprintChgLog + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Repro Steps: \n' + 'N/A\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Catalog:\n' + 'Intel, Balos\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Does this apply to other projects?\n' + 'No, for 2017 Balos only.\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Is Bios specification update required?\n' + 'No\n' + '\n'
-        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Is test plan update required?\n' + 'No\n' + '\n'            
+        SvnInfos.ChgLog = SvnInfos.ChgLog + 'Story Description:\n' + SprintChgLog + '\n' + '\n'
     else:
         for idx in range(MPathEndLine, revfdBufferCounts-1, 1):
             SvnInfos.ChgLog = SvnInfos.ChgLog + revfdBuffer[idx] + '\n'
@@ -162,16 +159,17 @@ def mailcomposer_HTML():
     body = body.replace("Date:", "<b>Date:</b>", 1)
     body = body.replace("Story ID:", "<b>Story ID:</b>", 1)    
     body = body.replace("Story Description:", "<b>Story Description:</b>", 1)
-    body = body.replace("Issue ID/Description:", "<b>Issue ID/Description:</b>", 1)
-    body = body.replace("Root cause:", "<b>Root cause:</b>", 1)
-    body = body.replace("Change Description:", "<b>Change Description:</b>", 1)
-    body = body.replace("Repro Steps:", "<b>Repro Steps:</b>", 1)
-    body = body.replace("Catalog:", "<b>Catalog:</b>", 1)
-    body = body.replace("Does this apply to other projects?", "<b>Does this apply to other projects?</b>", 1)
-    body = body.replace("Is Bios specification update required?", "<b>Is Bios specification update required?</b>", 1)
-    body = body.replace("Is test plan update required?", "<b>Is test plan update required?</b>", 1)
-    body = body.replace("File Changed:", "<b>File Changed:</b>", 1)
-    body = body.replace("Modified by:", "<b>Modified by:</b>", 1)
+    if UpdateSprintFlag==False:
+        body = body.replace("Issue ID/Description:", "<b>Issue ID/Description:</b>", 1)
+        body = body.replace("Root cause:", "<b>Root cause:</b>", 1)
+        body = body.replace("Change Description:", "<b>Change Description:</b>", 1)
+        body = body.replace("Repro Steps:", "<b>Repro Steps:</b>", 1)
+        body = body.replace("Catalog:", "<b>Catalog:</b>", 1)
+        body = body.replace("Does this apply to other projects?", "<b>Does this apply to other projects?</b>", 1)
+        body = body.replace("Is Bios specification update required?", "<b>Is Bios specification update required?</b>", 1)
+        body = body.replace("Is test plan update required?", "<b>Is test plan update required?</b>", 1)
+        body = body.replace("File Changed:", "<b>File Changed:</b>", 1)
+        body = body.replace("Modified by:", "<b>Modified by:</b>", 1)
     
     # body = body.replace("\n", "<BR>")
     body_html = """
