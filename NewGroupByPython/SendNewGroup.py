@@ -45,6 +45,7 @@ msg = MIMEMultipart('alternative')
 
 def SvnInfoGrabber(rev):
     global text
+    global UpdateSprintFlag
 
     process = subprocess.Popen(['svn', 'log', 'https://svn-pro.corp.hpicloud.net:20181/svn/svn-psgfw-platform14', '-r', rev, '-v'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process_out, process_err = process.communicate()
@@ -89,7 +90,6 @@ def SvnInfoGrabber(rev):
     
     if 'Sprint' in revfdBuffer[MPathEndLine+1]:
         UpdateSprintFlag=True
-        print (revfdBuffer[MPathEndLine+1])
         SprintTitle=revfdBuffer[MPathEndLine+1]
         SprintChgLog=''
         for idx in range(MPathEndLine+1, revfdBufferCounts-1, 1):
@@ -138,7 +138,8 @@ def mailcomposer_Text():
     
 def mailcomposer_HTML():
     global msg
-    
+    global UpdateSprintFlag
+
     msg['Subject'] = SvnInfos.ChgTitle
     msg['From'] = SvnInfos.EmailSender
     msg['To'] = SvnInfos.EmailRecipientList
@@ -159,6 +160,8 @@ def mailcomposer_HTML():
     body = body.replace("Date:", "<b>Date:</b>", 1)
     body = body.replace("Story ID:", "<b>Story ID:</b>", 1)    
     body = body.replace("Story Description:", "<b>Story Description:</b>", 1)
+    body = body.replace("File Changed:", "<b>File Changed:</b>", 1)
+    body = body.replace("Modified by:", "<b>Modified by:</b>", 1)
     if UpdateSprintFlag==False:
         body = body.replace("Issue ID/Description:", "<b>Issue ID/Description:</b>", 1)
         body = body.replace("Root cause:", "<b>Root cause:</b>", 1)
@@ -168,8 +171,7 @@ def mailcomposer_HTML():
         body = body.replace("Does this apply to other projects?", "<b>Does this apply to other projects?</b>", 1)
         body = body.replace("Is Bios specification update required?", "<b>Is Bios specification update required?</b>", 1)
         body = body.replace("Is test plan update required?", "<b>Is test plan update required?</b>", 1)
-        body = body.replace("File Changed:", "<b>File Changed:</b>", 1)
-        body = body.replace("Modified by:", "<b>Modified by:</b>", 1)
+        
     
     # body = body.replace("\n", "<BR>")
     body_html = """
